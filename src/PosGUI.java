@@ -4,11 +4,14 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-
+import java.awt.Color;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 import java.awt.*;
 
-public class PosGUI extends JFrame {
+public class PosGUI extends JFrame implements ActionListener{
     private GUIComponents element = new GUIComponents();
+    private String action;
 
     private JPanel eastPanel = new JPanel(new BorderLayout());
     private JPanel centerPanel = new JPanel();
@@ -101,7 +104,7 @@ public class PosGUI extends JFrame {
 
     public PosGUI() {
         super("Point of Sales System");
-        makeFrame();
+        //makeFrame();
     }
 
     public void makeFrame() {
@@ -217,6 +220,71 @@ public class PosGUI extends JFrame {
         
         add(eastPanel, BorderLayout.EAST);
         add(centerPanel, BorderLayout.CENTER);
+        centerPanel.setBackground(new Color(196,204,204));
+
+        btn1.addActionListener(this);
+        btn2.addActionListener(this);
+        btn3.addActionListener(this);
+        btn4.addActionListener(this);
+        btn5.addActionListener(this);
+        btn6.addActionListener(this);
+        btn7.addActionListener(this);
+        btn8.addActionListener(this);
+        btn9.addActionListener(this);
+        btn0.addActionListener(this);
+        btn00.addActionListener(this);
+        btn000.addActionListener(this);
+        btnDel.addActionListener(this);
+        btnQty.addActionListener(this);
+        btnCash.addActionListener(this);
+        btnPayCash.addActionListener(this);
+        btnPayCard.addActionListener(this);
+        btnCash1.addActionListener(this);
+        btnCash2.addActionListener(this);
+        btnCash5.addActionListener(this);
+        btnCash10.addActionListener(this);
+        btnCash20.addActionListener(this);
+        btnCash50.addActionListener(this);
+        btnCat1.addActionListener(this);
+        btnCat2.addActionListener(this);
+        btnCat3.addActionListener(this);
+        btnCat4.addActionListener(this);
+        btnCat5.addActionListener(this);
+        btnCat6.addActionListener(this);
+        btnCat7.addActionListener(this);
+        btnCat8.addActionListener(this);
+        btnCat9.addActionListener(this);
+        btnCat10.addActionListener(this);
+        btnCat11.addActionListener(this);
+        btnCat12.addActionListener(this);
+        btnCat13.addActionListener(this);
+        btnCat14.addActionListener(this);
+        btnVoucher.addActionListener(this);
+        btnPayOut.addActionListener(this);
+        btnLogOut.addActionListener(this);
+        btnRefund.addActionListener(this);
+        btnReceipt.addActionListener(this);
+        btnPrinter.addActionListener(this);
+        btnFunctions.addActionListener(this);
+        btnVoid.addActionListener(this);
+        btnUp.addActionListener(this);
+        btnDown.addActionListener(this);
+        btnHold.addActionListener(this);
+        btnPriceChk.addActionListener(this);
+    }
+
+    public void actionPerformed(ActionEvent evt){
+        Object source = evt.getSource();
+        if (source instanceof JButton){
+            JButton button = (JButton) source;
+            action = button.getText();
+            Action act = new Action();
+        }
+        
+    }
+
+    public String returnAction(){
+        return action;
     }
 
 }
