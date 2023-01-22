@@ -8,10 +8,14 @@ import java.awt.Color;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.*;
+import javax.swing.*;
+import javax.swing.table.*;
 
 public class PosGUI extends JFrame implements ActionListener{
     private GUIComponents element = new GUIComponents();
+    Action act = new Action();
     private String action;
+    private String inputDisplay;
 
     private JPanel eastPanel = new JPanel(new BorderLayout());
     private JPanel centerPanel = new JPanel();
@@ -85,7 +89,7 @@ public class PosGUI extends JFrame implements ActionListener{
     private JLabel qtyLabel = new JLabel("Quantity : 1");
     private JLabel inputNameLabel = new JLabel("Barcode");
     private JTextField bcInput = new JTextField();
-    private JTextArea billArea = new JTextArea();
+    //private JTextArea billArea = new JTextArea();
     private JLabel totDisplay = new JLabel("Tot: £-250.00");
     private JLabel balDisplay = new JLabel("Bal: £-250.00");
 
@@ -105,9 +109,42 @@ public class PosGUI extends JFrame implements ActionListener{
     public PosGUI() {
         super("Point of Sales System");
         //makeFrame();
+        
+
     }
 
     public void makeFrame() {
+        String[] columnNames = {"S/No", "Item", "U/Price", "Qty", "Price"};
+        Object[][] data = {
+            {"1", "Milk Shake", "2.00", "2", "4.00"},
+            {"2", "VAPE", "20.00", "1", "20.00"}
+        };
+
+        DefaultTableModel model = new DefaultTableModel(data, columnNames);
+        JTable table = new JTable(model);
+        table.setFont(new Font("Arial", Font.PLAIN, 18));
+        TableColumnModel columnModel = table.getColumnModel();
+        columnModel.getColumn(0).setPreferredWidth(50);
+        columnModel.getColumn(1).setPreferredWidth(390);
+        columnModel.getColumn(2).setPreferredWidth(100);
+        columnModel.getColumn(3).setPreferredWidth(80);
+        columnModel.getColumn(4).setPreferredWidth(100);
+
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
+        DefaultTableCellRenderer leftRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+        rightRenderer.setHorizontalAlignment(SwingConstants.RIGHT);
+        leftRenderer.setHorizontalAlignment(SwingConstants.LEFT);
+        table.setDefaultRenderer(Object.class, centerRenderer);
+        table.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
+        table.getColumnModel().getColumn(1).setCellRenderer(leftRenderer);
+        table.getColumnModel().getColumn(2).setCellRenderer(rightRenderer);
+        table.getColumnModel().getColumn(3).setCellRenderer(centerRenderer);
+        table.getColumnModel().getColumn(4).setCellRenderer(rightRenderer);
+
+        JScrollPane scrollPane = new JScrollPane(table);
+
         setLayout(new BorderLayout());
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setVisible(true);
@@ -178,8 +215,7 @@ public class PosGUI extends JFrame implements ActionListener{
         inputNameLabel.setFont(new Font("Arial", Font.PLAIN, 20));
         bcInput.setBounds(350, 110, 390, 40);
         bcInput.setFont(new Font("Arial", Font.PLAIN, 20));
-        billArea.setBounds(20, 170, 720, 385);
-        billArea.setFont(new Font("Arial", Font.PLAIN, 18));
+        scrollPane.setBounds(20, 170, 720, 385);
         totDisplay.setBounds(20, 505, 360, 200);
         totDisplay.setFont(new Font("Arial", Font.PLAIN, 60));
         balDisplay.setBounds(380, 505, 360, 200);
@@ -207,7 +243,8 @@ public class PosGUI extends JFrame implements ActionListener{
         centerPanel.add(qtyLabel);
         centerPanel.add(inputNameLabel);
         centerPanel.add(bcInput);
-        centerPanel.add(billArea);
+        //centerPanel.add(billArea);
+        centerPanel.add(scrollPane);
         centerPanel.add(totDisplay);
         centerPanel.add(balDisplay);
         centerPanel.add(westBotPanel);
@@ -278,13 +315,24 @@ public class PosGUI extends JFrame implements ActionListener{
         if (source instanceof JButton){
             JButton button = (JButton) source;
             action = button.getText();
-            Action act = new Action();
+            
+            act.getResponse(action);
+            if(act.bcDisplay() != null){
+                if(inputDisplay == null){
+                    inputDisplay = act.bcDisplay();
+                } else {
+                    inputDisplay = inputDisplay + act.bcDisplay();
+                }
+                bcInput.setText(inputDisplay);
+            } else {
+                bcInput.setText("");
+                inputDisplay = null;
+            }
+            
+            
+
         }
         
-    }
-
-    public String returnAction(){
-        return action;
     }
 
 }
