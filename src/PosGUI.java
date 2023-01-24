@@ -2,7 +2,6 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import java.awt.Color;
 import java.awt.event.ActionListener;
@@ -89,7 +88,7 @@ public class PosGUI extends JFrame implements ActionListener{
     private JLabel qtyLabel = new JLabel("Quantity : 1");
     private JLabel inputNameLabel = new JLabel("Barcode");
     private JTextField bcInput = new JTextField();
-    //private JTextArea billArea = new JTextArea();
+    private JTextPane billArea = new JTextPane();
     private JLabel totDisplay = new JLabel("Tot: £-250.00");
     private JLabel balDisplay = new JLabel("Bal: £-250.00");
 
@@ -105,6 +104,8 @@ public class PosGUI extends JFrame implements ActionListener{
     private JLabel printer = new JLabel("Printer Off");
     private JLabel date = new JLabel("Date: 10/01/2023");
     private JLabel time = new JLabel("Time: 10:00");
+
+    JScrollPane scrollPane;
 
     public PosGUI() {
         super("Point of Sales System");
@@ -143,7 +144,8 @@ public class PosGUI extends JFrame implements ActionListener{
         table.getColumnModel().getColumn(3).setCellRenderer(centerRenderer);
         table.getColumnModel().getColumn(4).setCellRenderer(rightRenderer);
 
-        JScrollPane scrollPane = new JScrollPane(table);
+        scrollPane = new JScrollPane(table);
+        billArea.insertComponent(scrollPane);
 
         setLayout(new BorderLayout());
         setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -215,7 +217,8 @@ public class PosGUI extends JFrame implements ActionListener{
         inputNameLabel.setFont(new Font("Arial", Font.PLAIN, 20));
         bcInput.setBounds(350, 110, 390, 40);
         bcInput.setFont(new Font("Arial", Font.PLAIN, 20));
-        scrollPane.setBounds(20, 170, 720, 385);
+        //scrollPane.setBounds(20, 170, 720, 385);
+        billArea.setBounds(20, 170, 720, 385);
         totDisplay.setBounds(20, 505, 360, 200);
         totDisplay.setFont(new Font("Arial", Font.PLAIN, 60));
         balDisplay.setBounds(380, 505, 360, 200);
@@ -243,8 +246,8 @@ public class PosGUI extends JFrame implements ActionListener{
         centerPanel.add(qtyLabel);
         centerPanel.add(inputNameLabel);
         centerPanel.add(bcInput);
-        //centerPanel.add(billArea);
-        centerPanel.add(scrollPane);
+        centerPanel.add(billArea);
+        //centerPanel.add(scrollPane);
         centerPanel.add(totDisplay);
         centerPanel.add(balDisplay);
         centerPanel.add(westBotPanel);
@@ -316,7 +319,7 @@ public class PosGUI extends JFrame implements ActionListener{
             JButton button = (JButton) source;
             action = button.getText();
             
-            act.getResponse(action);
+            act.getResponse(action, bcInput.getText());
             if(act.bcDisplay() != null){
                 if(inputDisplay == null){
                     inputDisplay = act.bcDisplay();
@@ -327,11 +330,13 @@ public class PosGUI extends JFrame implements ActionListener{
             } else {
                 bcInput.setText("");
                 inputDisplay = null;
-            }
+            }            
             
-            
-
         }
+        JTable table = act.updateTable();
+        scrollPane = new JScrollPane(table);
+        billArea.insertComponent(scrollPane);
+
         
     }
 
