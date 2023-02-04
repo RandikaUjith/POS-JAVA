@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.table.*;
+import javax.swing.text.BadLocationException;
 
 public class PosGUI extends JFrame implements ActionListener{
     private GUIComponents element = new GUIComponents();
@@ -89,8 +90,9 @@ public class PosGUI extends JFrame implements ActionListener{
     private JLabel inputNameLabel = new JLabel("Barcode");
     private JTextField bcInput = new JTextField();
     private JTextPane billArea = new JTextPane();
-    private JLabel totDisplay = new JLabel("Tot: £-250.00");
-    private JLabel balDisplay = new JLabel("Bal: £-250.00");
+    private JLabel totDisplay = new JLabel("Tot: £0.00");
+    private JLabel balDisplay = new JLabel("Bal: £0.00");
+    
 
     private JButton btnVoid = element.makeBtn("Void", catFontSize);
     private JButton btnUp = element.makeBtn("UP", catFontSize);
@@ -117,8 +119,8 @@ public class PosGUI extends JFrame implements ActionListener{
     public void makeFrame() {
         String[] columnNames = {"S/No", "Item", "U/Price", "Qty", "Price"};
         Object[][] data = {
-            {"1", "Milk Shake", "2.00", "2", "4.00"},
-            {"2", "VAPE", "20.00", "1", "20.00"}
+            // {"1", "Milk Shake", "2.00", "2", "4.00"},
+            // {"2", "VAPE", "20.00", "1", "20.00"}
         };
 
         DefaultTableModel model = new DefaultTableModel(data, columnNames);
@@ -257,6 +259,7 @@ public class PosGUI extends JFrame implements ActionListener{
         centerPanel.add(printer);
         centerPanel.add(date);
         centerPanel.add(time);
+        balDisplay.setForeground(Color.RED);
         
         add(eastPanel, BorderLayout.EAST);
         add(centerPanel, BorderLayout.CENTER);
@@ -331,13 +334,17 @@ public class PosGUI extends JFrame implements ActionListener{
                 bcInput.setText("");
                 inputDisplay = null;
             }            
-            
         }
+        try{
+            billArea.getDocument().remove(0, billArea.getDocument().getLength());
+        } catch (BadLocationException e) {
+            System.out.println("error");
+        }   
         JTable table = act.updateTable();
         scrollPane = new JScrollPane(table);
         billArea.insertComponent(scrollPane);
-
-        
+        qtyLabel.setText("Quantity : " + act.returnQty());
+        totDisplay.setText("Tot: £" + act.returnPrice());
     }
 
 }
